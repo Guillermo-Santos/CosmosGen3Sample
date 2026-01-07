@@ -1,0 +1,84 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build x64 ThreadingSample",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "src/ThreadingSample/ThreadingSample.csproj",
+        "-c", "Debug",
+        "-r", "linux-x64",
+        "-p:DefineConstants=ARCH_X64",
+        "-p:CosmosArch=x64",
+        "--verbosity", "minimal"
+      ],
+      "group": "build",
+      "problemMatcher": ["$msCompile"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Debug x64 ThreadingSample",
+      "dependsOn": ["Build x64 ThreadingSample"],
+      "dependsOrder": "sequence",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "qemu-system-x86_64 -M pc -cpu max -m 512M -serial stdio -cdrom ${workspaceFolder}/artifacts/publish/ThreadingSample/debug_linux-x64/ThreadingSample.iso -display gtk -vga std -netdev user,id=net0,hostfwd=udp::5555-:5555 -device e1000,netdev=net0 -object filter-dump,id=dump0,netdev=net0,file=${workspaceFolder}/packets.pcap -s -S -no-reboot -no-shutdown & sleep 1 && echo QEMU-THREADINGSAMPLE-DEBUG-READY && wait"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "qemu-threadingsample",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^qemu",
+          "endsPattern": "QEMU-THREADINGSAMPLE-DEBUG-READY"
+        },
+        "pattern": { "regexp": ".*" }
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Run QEMU x64 ThreadingSample",
+      "type": "shell",
+      "dependsOn": "Build x64 ThreadingSample",
+      "command": "qemu-system-x86_64",
+      "args": [
+        "-M", "q35",
+        "-cpu", "max",
+        "-m", "512M",
+        "-serial", "stdio",
+        "-cdrom", "${workspaceFolder}/artifacts/publish/ThreadingSample/debug_linux-x64/ThreadingSample.iso",
+        "-display", "gtk",
+        "-vga", "std",
+        "-device", "i8042",
+        "-netdev", "user,id=net0,hostfwd=udp::5555-:5555",
+        "-device", "e1000,netdev=net0",
+        "-object", "filter-dump,id=dump0,netdev=net0,file=packets.pcap",
+        "-no-reboot",
+        "-no-shutdown"
+      ],
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Stop QEMU x64 ThreadingSample",
+      "type": "shell",
+      "command": "pkill",
+      "args": ["-f", "qemu-system-x86_64.*ThreadingSample"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never"
+      }
+    }
+  ]
+}
