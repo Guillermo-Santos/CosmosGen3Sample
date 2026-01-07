@@ -1,0 +1,3 @@
+[submodule "Cosmos"]
+	path = Cosmos
+	url = https://github.com/valentinbreiz/nativeaot-patcher
