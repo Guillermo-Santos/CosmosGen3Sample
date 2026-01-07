@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/ThreadingSample.Common/ThreadingSample.Common.csproj" />
+    <Project Path="src/ThreadingSample.SourceGenerators/ThreadingSample.SourceGenerators.csproj" />
     <Project Path="src/ThreadingSample/ThreadingSample.csproj" />
   </Folder>
 </Solution>

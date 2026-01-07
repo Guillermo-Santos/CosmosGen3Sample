@@ -28,4 +28,9 @@
     <PackageReference Include="Cosmos.Kernel.HAL.ARM64" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../ThreadingSample.Common/ThreadingSample.Common.csproj" />
+    <ProjectReference Include="../ThreadingSample.SourceGenerators/ThreadingSample.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
 </Project>
