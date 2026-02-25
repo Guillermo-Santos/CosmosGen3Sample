@@ -1,4 +1,4 @@
-using Cosmos.Kernel.Graphics;
+using Cosmos.Kernel.System.Graphics;
 
 namespace ThreadingSample;
 
@@ -7,17 +7,18 @@ public static partial class GraphicWorker
 {
     public static void DoWork()
     {
-        if (Canvas.Width == 0 || Canvas.Height == 0)
+        var canvas = FullScreenCanvas.GetFullScreenCanvas();
+        if (canvas == null)
             return;
-
+            
         const int squareSize = 80;
         const int margin = 20;
 
-        int x = Canvas.Width >= (uint)(squareSize + margin * 2)
-            ? (int)Canvas.Width - squareSize - margin
+        int x = canvas.Mode.Width >= (uint)(squareSize + margin * 2)
+            ? (int)canvas.Mode.Width - squareSize - margin
             : margin;
-        int y = Canvas.Height >= (uint)(squareSize + margin * 2)
-            ? (int)Canvas.Height - squareSize - margin
+        int y = canvas.Mode.Height >= (uint)(squareSize + margin * 2)
+            ? (int)canvas.Mode.Height - squareSize - margin
             : margin;
 
         int frame = 0;
@@ -49,12 +50,13 @@ public static partial class GraphicWorker
                     byte pb = (byte)((b * factor) / 255);
                     uint pixelColor = (uint)((pr << 16) | (pg << 8) | pb);
 
-                    Canvas.DrawPixel(pixelColor, x + dx, y + dy);
+                    canvas.DrawPoint(pixelColor, x + dx, y + dy);
                 }
             }
-
+            
+            canvas.Display();
             frame++;
-            Thread.Sleep(100);
+            //Thread.Sleep(100);
         }
     }
 }

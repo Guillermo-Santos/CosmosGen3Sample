@@ -1,7 +1,8 @@
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Cosmos.Kernel.Graphics;
-using Cosmos.Kernel.Graphics.Fonts;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
 
 namespace ThreadingSample;
 
@@ -16,7 +17,15 @@ public static class TimeWorker
             Thread.Sleep(100);
         }
 
+        var canvas = FullScreenCanvas.GetFullScreenCanvas();
+
         var sb = new StringBuilder();
+
+        var font = PCScreenFont.DefaultFont;
+        var charwidth = font.Width;
+        var x = (int)(canvas.Mode.Width - (22 * charwidth)) - 2;
+        var y = 8;
+        
         while (true)
         {
             var now = DateTime.Now;
@@ -29,8 +38,11 @@ public static class TimeWorker
 
             string timeString = sb.ToString();
             sb.Clear();
-            Canvas.DrawRectangle(Color.Black, (int)(Canvas.Width - (timeString.Length * PCScreenFont.CharWidth)) - 2, 8, (timeString.Length * PCScreenFont.CharWidth) + 4, PCScreenFont.CharHeight + 4);
-            Canvas.DrawString(timeString, (int)(Canvas.Width - (timeString.Length * PCScreenFont.CharWidth)) - 2, 8, 0xFFFFFF);
+
+
+            canvas.DrawFilledRectangle(Color.Black, x, y, (22 * charwidth) + 4, font.Height + 4, preventOffBoundPixels: true);
+            canvas.DrawString(timeString, font, Color.Gray, x, y);
+            canvas.Display();
 
             Thread.Sleep(1000);
         }
