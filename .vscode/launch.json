@@ -7,6 +7,9 @@
       "request": "launch",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
+      "sourceFileMap": {
+        "/_/src/runtime": "${workspaceFolder}/Cosmos/dotnet/runtime"
+      },
       "targetArchitecture": "x64",
       "program": "${workspaceFolder}/artifacts/bin/ThreadingSample/debug_linux-x64/ThreadingSample.elf",
       "args": [],
